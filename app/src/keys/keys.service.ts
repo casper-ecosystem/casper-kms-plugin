@@ -1,4 +1,5 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { DeployHash, PublicKey } from 'casper-sdk';
 import {
   CreateKeyCommandInput,
@@ -10,29 +11,54 @@ import {
 } from '@aws-sdk/client-kms';
 import { util, asn1 } from 'node-forge';
 
+import { ConfigType } from 'src/config';
+
 @Injectable()
 export class KeysService {
-  private casperSecpSignaturePrefix = '02';
+  protected readonly logger = new Logger(KeysService.name);
 
-  private getKMS(sign = false): KMS {
-    return new KMS({
-      region: process.env.AWS_REGION,
+  private casperSecpSignaturePrefix = '02';
+  private createKms: KMS;
+  private signKms: KMS;
+
+  constructor(private readonly configService: ConfigService<ConfigType, true>) {
+    this.createKms = new KMS({
+      region: this.configService.get('aws.region', { infer: true }),
       credentials: {
-        accessKeyId: sign ? process.env.KMS_SIGN_ID : process.env.KMS_CREATE_ID,
-        secretAccessKey: sign
-          ? process.env.KMS_SIGN_KEY
-          : process.env.KMS_CREATE_KEY,
+        accessKeyId: this.configService.get('aws.create.accessKeyId', {
+          infer: true,
+        }),
+        secretAccessKey: this.configService.get('aws.create.secretAccessKey', {
+          infer: true,
+        }),
       },
     });
+
+    this.signKms = new KMS({
+      region: this.configService.get('aws.region', { infer: true }),
+      credentials: {
+        accessKeyId: this.configService.get('aws.sign.accessKeyId', {
+          infer: true,
+        }),
+        secretAccessKey: this.configService.get('aws.sign.secretAccessKey', {
+          infer: true,
+        }),
+      },
+    });
+  }
+
+  private getKMS(sign = false): KMS {
+    return sign ? this.signKms : this.createKms;
   }
 
   public async generateKeypair() {
     const public_key = await this.createKey();
     if (!public_key) {
       const err = 'No public_key key generated';
-      console.error(err);
+      this.logger.error(err);
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
     return public_key;
   }
 
@@ -40,18 +66,18 @@ export class KeysService {
     deploy_hash: string,
     public_key_hex: string,
   ): Promise<string> {
-    console.debug('deploy_hash to sign', deploy_hash);
+    this.logger.debug('deploy_hash to sign', deploy_hash);
 
     // Validate parameters
     try {
       new DeployHash(deploy_hash);
       new PublicKey(public_key_hex);
     } catch (error) {
-      console.debug(
+      this.logger.debug(
         `Error reading parameters \npublic_key_hex : ${public_key_hex}\ndeploy_hash : ${deploy_hash}`,
       );
       if (error) {
-        console.error(error);
+        this.logger.error(error);
       }
       throw new HttpException(
         'reading deploy parameters',
@@ -72,7 +98,7 @@ export class KeysService {
 
       const binaryData = Buffer.from(deploy_hash, 'hex');
       const base64String = binaryData.toString('base64');
-      console.debug('deployHash base64String', base64String);
+      this.logger.debug('deployHash base64String', base64String);
 
       // Sign the deploy hash asynchronously
       const signature = await kms.sign({
@@ -85,22 +111,22 @@ export class KeysService {
       const signatureAsn1Base64 = Buffer.from(signature.Signature).toString(
         'base64',
       );
-      console.debug('signatureAsn1Base64', signatureAsn1Base64);
+      this.logger.debug('signatureAsn1Base64', signatureAsn1Base64);
       // MEQCIEC/XbpuvXoJiPNmmWOt1lZ8TQSA1Je3ETwxgJYLzTU4AiAIdkD09QCk+led1e55o5HbAefdyTb3rAV1CousZWplag==
 
       const hexSignatureAsn1Base64 = Buffer.from(signature.Signature).toString(
         'hex',
       );
 
-      console.debug('hexSignatureAsn1Base64', hexSignatureAsn1Base64);
+      this.logger.debug('hexSignatureAsn1Base64', hexSignatureAsn1Base64);
       // 3044022040bf5dba6ebd7a0988f3669963add6567c4d0480d497b7113c3180960bcd35380220087640f4f500a4fa579dd5ee79a391db01e7ddc936f7ac05750a8bac656a656a
       const signatureHex =
         this.convertSignatureAsn1ToP1363(signatureAsn1Base64);
-      console.debug('signatureHex', signatureHex);
+      this.logger.debug('signatureHex', signatureHex);
 
       return signatureHex;
     } catch (error) {
-      console.error('Error signing deploy:', error);
+      this.logger.error('Error signing deploy:', error);
       throw new HttpException(
         'Error signing deploy',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -132,10 +158,10 @@ export class KeysService {
       // Convert ASN.1 sequence to an array of values
       const asn1Sequence = asn1_from_der.value as asn1.Asn1[];
       if (asn1Sequence.length !== 2) {
-        console.error('asn1Sequence', asn1Sequence);
+        this.logger.error('asn1Sequence', asn1Sequence);
         throw new Error('Invalid ASN.1 sequence length');
       }
-      console.debug('asn1Sequence', asn1Sequence);
+      this.logger.debug('asn1Sequence', asn1Sequence);
 
       // Extract r and s values from ASN.1 sequence
       const r = asn1Sequence[0].value as string;
@@ -145,8 +171,16 @@ export class KeysService {
       let rBuffer = util.createBuffer(r, 'raw').toHex();
       let sBuffer = util.createBuffer(s, 'raw').toHex();
 
-      console.debug(rBuffer.length, result.length, rBuffer.startsWith('00'));
-      console.debug(sBuffer.length, result.length, sBuffer.startsWith('00'));
+      this.logger.debug(
+        rBuffer.length,
+        result.length,
+        rBuffer.startsWith('00'),
+      );
+      this.logger.debug(
+        sBuffer.length,
+        result.length,
+        sBuffer.startsWith('00'),
+      );
 
       // Remove leading zeros if r or s is 33 bytes in hex starting with 0x00
       if (rBuffer.length > result.length && rBuffer.startsWith('00')) {
@@ -156,14 +190,14 @@ export class KeysService {
         sBuffer = sBuffer.slice(2);
       }
 
-      console.debug('modified rBuffer:', rBuffer);
-      console.debug('modified sBuffer:', sBuffer);
+      this.logger.debug('modified rBuffer:', rBuffer);
+      this.logger.debug('modified sBuffer:', sBuffer);
 
       const concatenatedHex = rBuffer + sBuffer;
 
       const full33BytesHexSignature =
         this.casperSecpSignaturePrefix + concatenatedHex;
-      console.debug('P1363 Signature:', full33BytesHexSignature);
+      this.logger.debug('P1363 Signature:', full33BytesHexSignature);
       return full33BytesHexSignature;
     } catch (error) {
       throw new Error(
@@ -182,11 +216,11 @@ export class KeysService {
     const sLength = binPem[5 + rLength] - 1; // Adjusted length to account for ASN.1 encoding
     const rStart = 4;
     const sStart = 3 + rStart + rLength; // Adjusted start index
-    // console.log('rLength:', rLength);
-    // console.log('rStart:', rStart);
-    // console.log('sStart:', sStart);
-    // console.log('binPem length:', binPem.length);
-    // console.log('sStart + sLength:', sStart + sLength);
+    // this.logger.log('rLength:', rLength);
+    // this.logger.log('rStart:', rStart);
+    // this.logger.log('sStart:', sStart);
+    // this.logger.log('binPem length:', binPem.length);
+    // this.logger.log('sStart + sLength:', sStart + sLength);
     const s = binPem.subarray(sStart, sStart + sLength);
     const hexString = Array.from(s, (val) =>
       val.toString(16).padStart(2, '0'),
@@ -242,19 +276,19 @@ export class KeysService {
     return new Promise<string>((resolve, reject) => {
       kms.createKey(params, async (err, data) => {
         if (err) {
-          console.error('Error creating key:', err);
+          this.logger.error('Error creating key:', err);
           reject(err);
         } else {
           const keyId = data.KeyMetadata.KeyId;
-          console.debug('Key created successfully:', keyId);
+          this.logger.debug('Key created successfully:', keyId);
 
           const publicKeyParams = { KeyId: keyId };
           try {
             const publicKeyData = await kms.getPublicKey(publicKeyParams);
-            console.debug(publicKeyData);
+            this.logger.debug(publicKeyData);
 
             const publicKeyBuffer = Buffer.from(publicKeyData.PublicKey);
-            console.debug(
+            this.logger.debug(
               'publicKeyBuffer',
               publicKeyBuffer.toString('base64'),
             );
@@ -262,7 +296,7 @@ export class KeysService {
             const secp256k1Hex = this.publicHexFromPem(
               publicKeyBuffer.toString('base64'),
             );
-            console.debug('secp256k1Hex', secp256k1Hex);
+            this.logger.debug('secp256k1Hex', secp256k1Hex);
             const publicKeyBytes = Buffer.from(secp256k1Hex, 'hex');
 
             const compressedPublicKey =
@@ -272,7 +306,7 @@ export class KeysService {
               this.casperSecpSignaturePrefix +
               Buffer.from(compressedPublicKey).toString('hex');
 
-            console.debug(
+            this.logger.debug(
               'Public key retrieved and compressed successfully:',
               publicKeyHex,
             );
@@ -284,7 +318,7 @@ export class KeysService {
 
             resolve(publicKeyHex);
           } catch (error) {
-            console.error('Error creating alias:', error);
+            this.logger.error('Error creating alias:', error);
             reject(error);
           }
         }

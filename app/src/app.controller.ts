@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
+
 import { AppService } from './app.service';
-import { KeysService } from '../lib/services/keys.service';
+import { KeysService } from './keys/keys.service';
 
 export class SignDto {
   deploy_hash: string;
@@ -17,7 +18,7 @@ export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly keysService: KeysService,
-  ) { }
+  ) {}
 
   @Get()
   getHello(): string {
