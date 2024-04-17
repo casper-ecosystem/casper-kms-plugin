@@ -1,5 +1,5 @@
 const config = () => ({
-  port: parseInt(process.env.PORT, 10) || 8080,
+  port: parseInt(process.env.PORT, 10) || 4000,
   aws: {
     region: process.env.AWS_REGION,
     sign: {
