@@ -6,7 +6,7 @@ import * as express from 'express';
 async function bootstrap() {
   dotenv.config();
   const app = await NestFactory.create(AppModule);
-  //app.setGlobalPrefix('rpc');
+
   app.use('/sign', express.json({ limit: '2mb' }));
   await app.listen(8080);
 }

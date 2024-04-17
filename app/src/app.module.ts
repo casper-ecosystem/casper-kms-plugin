@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { KeysService } from '../lib/services/keys.service';
-import { AppService } from './app.service';
 import * as dotenv from 'dotenv';
+
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { KeysService } from './keys/keys.service';
+
 dotenv.config({ path: '.env.production' });
 dotenv.config({ path: '.env' });
 const isDebug = process.env.DEBUG === 'true';
@@ -20,4 +22,4 @@ console.debug = (...args) => {
   controllers: [AppController],
   providers: [AppService, KeysService],
 })
-export class AppModule { }
+export class AppModule {}
