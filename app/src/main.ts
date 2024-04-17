@@ -8,7 +8,7 @@ async function bootstrap() {
 
   app.use('/sign', express.json({ limit: '2mb' }));
 
-  const PORT = parseInt(process.env.PORT, 10) || 8080;
+  const PORT = parseInt(process.env.PORT, 10) || 4000;
 
   await app.listen(PORT);
 }

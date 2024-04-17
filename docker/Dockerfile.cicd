@@ -1,0 +1,30 @@
+FROM --platform=linux/amd64 node:20.10.0-alpine as build
+
+WORKDIR /app
+
+COPY pkg-nodejs ../pkg-nodejs
+
+COPY app/package*.json ./
+
+RUN npm ci
+
+COPY app/. .
+
+# Build and remove devDependencies
+RUN npm run build \
+  && npm prune --production
+
+FROM --platform=linux/amd64 node:20.10.0-alpine
+
+ENV NODE_ENV "production"
+
+WORKDIR /app
+
+COPY pkg-nodejs ../pkg-nodejs
+COPY --from=build --chown=node:node /app/package*.json ./
+COPY --from=build --chown=node:node /app/node_modules/ ./node_modules/
+COPY --from=build --chown=node:node /app/dist/ ./dist/
+
+CMD npm run start:prod
+
+EXPOSE 4000

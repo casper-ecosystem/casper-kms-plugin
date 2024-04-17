@@ -1,0 +1,15 @@
+services:
+  casper-kms-plugin:
+    container_name: casper-kms-plugin
+    image: casper-kms-plugin:latest
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile.cicd
+    volumes:
+      - type: bind
+        source: ../app/src
+        target: /app/src
+    env_file:
+      - ../app/.env
+    ports:
+      - "4000:4000"

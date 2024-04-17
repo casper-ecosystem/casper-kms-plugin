@@ -1,9 +1,0 @@
-services:
-  casper-kms-plugin:
-    container_name: casper-kms-plugin
-    image: casper-kms-plugin:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
