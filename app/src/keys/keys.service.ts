@@ -18,8 +18,8 @@ export class KeysService {
   protected readonly logger = new Logger(KeysService.name);
 
   private casperSecpSignaturePrefix = '02';
-  createKms: KMS;
-  signKms: KMS;
+  private createKms: KMS;
+  private signKms: KMS;
 
   constructor(private readonly configService: ConfigService<ConfigType, true>) {
     this.createKms = new KMS({
@@ -48,15 +48,7 @@ export class KeysService {
   }
 
   private getKMS(sign = false): KMS {
-    return new KMS({
-      region: process.env.AWS_REGION,
-      credentials: {
-        accessKeyId: sign ? process.env.KMS_SIGN_ID : process.env.KMS_CREATE_ID,
-        secretAccessKey: sign
-          ? process.env.KMS_SIGN_KEY
-          : process.env.KMS_CREATE_KEY,
-      },
-    });
+    return sign ? this.signKms : this.createKms;
   }
 
   public async generateKeypair() {
