@@ -1,24 +1,13 @@
 import { Module } from '@nestjs/common';
-import * as dotenv from 'dotenv';
+import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import config from './config';
 import { KeysService } from './keys/keys.service';
 
-dotenv.config({ path: '.env.production' });
-dotenv.config({ path: '.env' });
-const isDebug = process.env.DEBUG === 'true';
-
-// Override console.debug
-const debug = console.debug;
-console.debug = (...args) => {
-  if (isDebug) {
-    debug('[DEBUG]', ...args);
-  }
-};
-
 @Module({
-  imports: [],
+  imports: [ConfigModule.forRoot({ isGlobal: true, load: [config] })],
   controllers: [AppController],
   providers: [AppService, KeysService],
 })

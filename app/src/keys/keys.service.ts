@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { DeployHash, PublicKey } from 'casper-sdk';
 import {
   CreateKeyCommandInput,
@@ -10,11 +11,41 @@ import {
 } from '@aws-sdk/client-kms';
 import { util, asn1 } from 'node-forge';
 
+import { ConfigType } from 'src/config';
+
 @Injectable()
 export class KeysService {
   protected readonly logger = new Logger(KeysService.name);
 
   private casperSecpSignaturePrefix = '02';
+  createKms: KMS;
+  signKms: KMS;
+
+  constructor(private readonly configService: ConfigService<ConfigType, true>) {
+    this.createKms = new KMS({
+      region: this.configService.get('aws.region', { infer: true }),
+      credentials: {
+        accessKeyId: this.configService.get('aws.create.accessKeyId', {
+          infer: true,
+        }),
+        secretAccessKey: this.configService.get('aws.create.secretAccessKey', {
+          infer: true,
+        }),
+      },
+    });
+
+    this.signKms = new KMS({
+      region: this.configService.get('aws.region', { infer: true }),
+      credentials: {
+        accessKeyId: this.configService.get('aws.sign.accessKeyId', {
+          infer: true,
+        }),
+        secretAccessKey: this.configService.get('aws.sign.secretAccessKey', {
+          infer: true,
+        }),
+      },
+    });
+  }
 
   private getKMS(sign = false): KMS {
     return new KMS({
