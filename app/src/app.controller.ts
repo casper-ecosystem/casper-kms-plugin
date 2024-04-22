@@ -58,8 +58,16 @@ export class AppController {
     schema: {
       type: 'object',
       properties: {
-        public_key: { type: 'string', example: '023e5ad7edb6b72e6eac100e25a1c42b8d608744f3b6b38269cd80aac00464773b' },
-        deploy_hash: { type: 'string', example: 'f54ba7e43614e6a366cab74c243c3898fb95901cc0751b384a16fd8222d857b9' },
+        public_key: {
+          type: 'string',
+          example:
+            '023e5ad7edb6b72e6eac100e25a1c42b8d608744f3b6b38269cd80aac00464773b',
+        },
+        deploy_hash: {
+          type: 'string',
+          example:
+            'f54ba7e43614e6a366cab74c243c3898fb95901cc0751b384a16fd8222d857b9',
+        },
       },
       required: ['public_key', 'deploy_hash'],
     },
