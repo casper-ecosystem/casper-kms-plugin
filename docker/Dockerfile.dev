@@ -1,0 +1,15 @@
+FROM --platform=linux/amd64 node:20.10.0-alpine
+
+ENV NODE_ENV "development"
+
+WORKDIR /app
+
+COPY pkg-nodejs ../pkg-nodejs
+
+COPY app .
+
+RUN npm install
+
+CMD npm run start:dev
+
+EXPOSE 4000
