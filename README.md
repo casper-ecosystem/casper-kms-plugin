@@ -52,6 +52,10 @@ make stop test
 
 ## Api
 
+Swagger
+
+http://localhost:4000/api
+
 API Endpoint:
 
 http://localhost:4000/
