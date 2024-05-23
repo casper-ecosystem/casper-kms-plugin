@@ -71,10 +71,8 @@ Status Codes:
 
 _Body (Successful Response):_
 
-```json
-{
-  "message": "KMS DEV_MODE or KMS MOCK_TESTING_MODE or KMS for production mode"
-}
+```
+"KMS DEV_MODE or KMS MOCK_TESTING_MODE or KMS for production mode"
 ```
 
 ## generateKeypair
@@ -96,7 +94,7 @@ Status Codes:
 
 _Body (Successful Response):_
 
-```json
+```
 02026120214ae59d581550fdf2b38dbe58bd18125f05b16c32687169aae47576f1db
 ```
 
@@ -123,7 +121,6 @@ Body:
       "dependencies": [],
       "chain_name": "casper"
       ...
-            ...
       "approvals": []
     }
   }
@@ -173,7 +170,7 @@ Status Codes:
 
 _Body (Successful Response):_
 
-```json
+```
 021b9083630588c344d71d6b699d2a119ec37759ffd7698c02bf391357a413e5207fa8e1baa96b77def187342d4e4944c5d7eb66f9b03918bdc9ac6e5e24dcd47a
 ```
 
