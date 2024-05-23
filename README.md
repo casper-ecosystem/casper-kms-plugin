@@ -210,6 +210,8 @@ Body:
 }
 ```
 
+Query Parameters:
+
 - public_key: The public key associated with the deploy. (Example: '023e5ad7edb6b72e6eac100e25a1c42b8d608744f3b6b38269cd80aac00464773b')
 - signature: The signature associated with the deploy. (Example: '021b9083630588c344d71d6b699d2a119ec37759ffd7698c02bf391357a413e5207fa8e1baa96b77def187342d4e4944c5d7eb66f9b03918bdc9ac6e5e24dcd47a')
 
