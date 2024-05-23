@@ -11,6 +11,8 @@ const config = () => ({
       secretAccessKey: process.env.KMS_CREATE_KEY,
     },
   },
+  dev_mode: process.env.NODE_ENV == 'development' || false,
+  mock_testing_mode: process.env.MOCK_TESTING_MODE == 'true' || false,
 });
 
 export type ConfigType = ReturnType<typeof config>;

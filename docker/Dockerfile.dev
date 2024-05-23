@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:20.10.0-alpine
+FROM --platform=linux/amd64 node:22.2.0-alpine
 
 ENV NODE_ENV "development"
 
@@ -7,6 +7,8 @@ WORKDIR /app
 COPY pkg-nodejs ../pkg-nodejs
 
 COPY app .
+
+RUN npm install -g npm
 
 RUN npm install
 

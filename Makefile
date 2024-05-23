@@ -1,14 +1,37 @@
-export
+CURRENT_DIR = .
 
-.PHONY: dev-build dev-start clean
+# Extract the second argument from MAKECMDGOALS, defaulting to "stable"
+PROFILE ?= $(word 2,$(MAKECMDGOALS))
+PROFILE := $(if $(PROFILE),$(PROFILE),production)
 
-DEV_DC = docker compose -p casper-kms-plugin -f docker/docker-compose.dev.yml
+DC = docker compose -f $(CURRENT_DIR)/docker/docker-compose.yml
 
-dev-build:
-	$(DEV_DC) build
+build:
+	$(DC) --profile $(PROFILE) build
 
-dev-start:
-	$(DEV_DC) up
+up:
+	$(DC) --profile $(PROFILE) up --remove-orphans
 
-clean:
-	$(DEV_DC) stop
+start:
+	$(DC) --profile $(PROFILE) up --remove-orphans -d
+
+stop:
+	$(DC) --profile $(PROFILE) stop
+
+build-no-cache:
+	$(DC) --profile $(PROFILE) build --no-cache
+
+build-start: build
+	$(DC) --profile $(PROFILE) up --remove-orphans	-d
+
+build-start-log: build
+	$(DC) --profile $(PROFILE) up --remove-orphans
+
+test:
+	cd app/src && npm run test
+
+
+%:
+	@:
+
+.PHONY: build up start stop build-no-cache build-start build-start-log

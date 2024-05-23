@@ -36,43 +36,118 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var casper_sdk_1 = require("casper-sdk");
+var casper_ts_sdk_1 = require("casper-ts-sdk");
 var axios_1 = require("axios");
-var url = 'http://127.0.0.1';
+var url = 'http://localhost';
 var port = 4000;
 var endpoint_generate = 'generateKeypair';
-var endpoint_sign = 'sign';
-var generateKeyAddress = "".concat(url, ":").concat(port, "/").concat(endpoint_generate);
-var signAddress = "".concat(url, ":").concat(port, "/").concat(endpoint_sign);
-function fetchPublicKey() {
-    return __awaiter(this, void 0, void 0, function () {
-        var response, error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, axios_1.default.post(generateKeyAddress)];
-                case 1:
-                    response = _a.sent();
-                    return [2 /*return*/, response.data];
-                case 2:
-                    error_1 = _a.sent();
-                    console.error('Error:', error_1);
-                    return [2 /*return*/, null];
-                case 3: return [2 /*return*/];
-            }
-        });
+var endpoint_sign_deploy_hash = 'signDeployHash';
+var endpoint_sign_deploy = 'signDeploy';
+var generateKey_address = "".concat(url, ":").concat(port, "/").concat(endpoint_generate);
+var sign_deploy_hash_address = "".concat(url, ":").concat(port, "/").concat(endpoint_sign_deploy_hash);
+var sign_deploy_address = "".concat(url, ":").concat(port, "/").concat(endpoint_sign_deploy);
+// signDeploy
+var example_0 = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var sdk, chain_name, public_key, payment_amount, contract_name, entry_point, deploy_params, token_owner, session_params, payment_params, unsigned_deploy, signed_deploy_string, signed_deploy;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                sdk = new casper_ts_sdk_1.SDK();
+                chain_name = 'casper-net-1';
+                return [4 /*yield*/, fetchPublicKey()];
+            case 1:
+                public_key = _a.sent();
+                payment_amount = '5000000000';
+                contract_name = 'cep-78-contract';
+                entry_point = 'mint';
+                deploy_params = new casper_ts_sdk_1.DeployStrParams(chain_name, public_key);
+                token_owner = 'account-hash-878985c8c07064e09e67cc349dd21219b8e41942a0adc4bfa378cf0eace32611';
+                session_params = new casper_ts_sdk_1.SessionStrParams();
+                session_params.session_name = contract_name;
+                session_params.session_entry_point = entry_point;
+                session_params.session_args_simple = ["token_meta_data:String='test_meta_data'", "token_owner:Key='".concat(token_owner, "'")];
+                payment_params = new casper_ts_sdk_1.PaymentStrParams(payment_amount);
+                unsigned_deploy = sdk.make_deploy(deploy_params, session_params, payment_params);
+                // const unsigned_deploy_as_json = unsigned_deploy.toJson();
+                // console.debug(jsonPrettyPrint(unsigned_deploy_as_json, Verbosity.Medium));
+                console.debug('deploy hash to sign', unsigned_deploy.hash.toString());
+                console.debug('public key to sign', public_key);
+                return [4 /*yield*/, sign_deploy(unsigned_deploy, public_key)];
+            case 2:
+                signed_deploy_string = _a.sent();
+                signed_deploy = new casper_ts_sdk_1.Deploy(signed_deploy_string);
+                console.debug('signed deploy', (0, casper_ts_sdk_1.jsonPrettyPrint)(signed_deploy.toJson(), casper_ts_sdk_1.Verbosity.Medium));
+                console.debug('validate Deploy Size', signed_deploy.validateDeploySize());
+                return [2 /*return*/];
+        }
     });
-}
-var sign = function (public_key, deploy_hash) { return __awaiter(void 0, void 0, void 0, function () {
+}); };
+// signDeployHash
+var example_1 = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var sdk, chain_name, public_key, payment_amount, contract_name, entry_point, deploy_params, token_owner, session_params, payment_params, unsigned_deploy, signature, signed_deploy;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                sdk = new casper_ts_sdk_1.SDK();
+                chain_name = 'casper-net-1';
+                return [4 /*yield*/, fetchPublicKey()];
+            case 1:
+                public_key = _a.sent();
+                payment_amount = '5000000000';
+                contract_name = 'cep-78-contract';
+                entry_point = 'mint';
+                deploy_params = new casper_ts_sdk_1.DeployStrParams(chain_name, public_key);
+                token_owner = 'account-hash-878985c8c07064e09e67cc349dd21219b8e41942a0adc4bfa378cf0eace32611';
+                session_params = new casper_ts_sdk_1.SessionStrParams();
+                session_params.session_name = contract_name;
+                session_params.session_entry_point = entry_point;
+                session_params.session_args_simple = ["token_meta_data:String='test_meta_data'", "token_owner:Key='".concat(token_owner, "'")];
+                payment_params = new casper_ts_sdk_1.PaymentStrParams(payment_amount);
+                unsigned_deploy = sdk.make_deploy(deploy_params, session_params, payment_params);
+                // const unsigned_deploy_as_json = unsigned_deploy.toJson();
+                // console.debug(jsonPrettyPrint(unsigned_deploy_as_json, Verbosity.Medium));
+                console.debug('deploy hash to sign', unsigned_deploy.hash.toString());
+                console.debug('public key to sign', public_key);
+                return [4 /*yield*/, sign_deploy_hash(public_key, unsigned_deploy.hash.toString())];
+            case 2:
+                signature = _a.sent();
+                console.debug('signature', signature);
+                signed_deploy = unsigned_deploy.addSignature(public_key, signature);
+                console.debug('signed deploy', (0, casper_ts_sdk_1.jsonPrettyPrint)(signed_deploy.toJson(), casper_ts_sdk_1.Verbosity.Medium));
+                console.debug('validate Deploy Size', signed_deploy.validateDeploySize());
+                return [2 /*return*/];
+        }
+    });
+}); };
+var fetchPublicKey = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1.default.post(generateKey_address)];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_1 = _a.sent();
+                console.error('Error:', error_1);
+                return [2 /*return*/, null];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+var sign_deploy_hash = function (public_key, deploy_hash) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_1.default.post(signAddress, {
-                        public_key: public_key,
-                        deploy_hash: deploy_hash,
+                return [4 /*yield*/, axios_1.default.get(sign_deploy_hash_address, {
+                        params: {
+                            public_key: public_key,
+                            deploy_hash: deploy_hash,
+                        },
                     })];
             case 1:
                 response = _a.sent();
@@ -85,38 +160,28 @@ var sign = function (public_key, deploy_hash) { return __awaiter(void 0, void 0,
         }
     });
 }); };
-var example1 = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var sdk, chain_name, public_key, payment_amount, contract_name, entry_point, deploy_params, token_owner, session_params, payment_params, deploy_result, deploy_result_as_json, signature, signed_deploy;
+var sign_deploy = function (deploy, public_key) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                sdk = new casper_sdk_1.SDK();
-                chain_name = 'casper-net-1';
-                public_key = '02033e419ebfa015d05c51984277dff16ca47e8f08d5a47bc30beb477c6e88c02963';
-                payment_amount = '5000000000';
-                contract_name = 'cep-78-contract';
-                entry_point = 'mint';
-                deploy_params = new casper_sdk_1.DeployStrParams(chain_name, public_key);
-                token_owner = 'account-hash-878985c8c07064e09e67cc349dd21219b8e41942a0adc4bfa378cf0eace32611';
-                session_params = new casper_sdk_1.SessionStrParams();
-                session_params.session_name = contract_name;
-                session_params.session_entry_point = entry_point;
-                session_params.session_args_simple = ["token_meta_data:String='test_meta_data'", "token_owner:Key='".concat(token_owner, "'")];
-                payment_params = new casper_sdk_1.PaymentStrParams(payment_amount);
-                deploy_result = sdk.make_deploy(deploy_params, session_params, payment_params);
-                deploy_result_as_json = deploy_result.toJson();
-                // console.debug(jsonPrettyPrint(deploy_result_as_json, Verbosity.Medium));
-                console.debug('deploy hash to sign', deploy_result.hash.toString());
-                console.debug('public key to sign', public_key);
-                return [4 /*yield*/, sign(public_key, deploy_result.hash.toString())];
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, axios_1.default.post(sign_deploy_address, {
+                        deploy: deploy.toJson(),
+                    }, {
+                        params: {
+                            public_key: public_key,
+                        },
+                    })];
             case 1:
-                signature = _a.sent();
-                console.debug('signature', signature);
-                signed_deploy = deploy_result.addSignature(public_key, signature);
-                console.debug('signed deploy', (0, casper_sdk_1.jsonPrettyPrint)(signed_deploy.toJson(), casper_sdk_1.Verbosity.Medium));
-                console.log('validate Deploy Size', signed_deploy.validateDeploySize());
-                return [2 /*return*/];
+                response = _a.sent();
+                return [2 /*return*/, response.data];
+            case 2:
+                error_3 = _a.sent();
+                console.error('Error:', error_3);
+                return [2 /*return*/, null];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
-example1();
+example_0();

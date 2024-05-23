@@ -5,15 +5,13 @@ import config from './config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
   const swagger = new DocumentBuilder()
-    .setTitle('Equitibrix API')
-    .setDescription('Equitibrix API')
+    .setTitle('KMS Plugin API')
+    .setDescription('KMS Plugin API')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, swagger);
   SwaggerModule.setup('api', app, document);
-
   await app.listen(config().port);
 }
 bootstrap();

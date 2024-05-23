@@ -1,0 +1,38 @@
+services:
+  casper-kms-plugin-dev:
+    container_name: casper-kms-plugin-dev
+    image: casper-kms-plugin-dev:latest
+    profiles: ["dev"]
+    extends:
+      service: casper-kms-plugin-common
+      file: common-service.yml
+    build:
+      dockerfile: ./docker/Dockerfile.dev
+    env_file:
+      - ../app/.env
+
+  casper-kms-plugin-test:
+    container_name: casper-kms-plugin-test
+    image: casper-kms-plugin-test:latest
+    profiles: ["test"]
+    extends:
+      service: casper-kms-plugin-common
+      file: common-service.yml
+    environment:
+      - MOCK_TESTING_MODE=true
+    build:
+      dockerfile: ./docker/Dockerfile.cicd
+
+  casper-kms-plugin:
+    container_name: casper-kms-plugin
+    image: casper-kms-plugin:latest
+    profiles: ["production"]
+    extends:
+      service: casper-kms-plugin-common
+      file: common-service.yml
+    build:
+      dockerfile: ./docker/Dockerfile.cicd
+    env_file:
+      - ../app/.env
+
+
