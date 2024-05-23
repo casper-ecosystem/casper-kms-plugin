@@ -110,6 +110,7 @@ API Endpoint:
 http://localhost:4000/signDeploy
 
 Method: POST
+
 Body:
 
 ```json
@@ -162,6 +163,7 @@ Method: GET
 Query Parameters:
 
 - public_key: The public key associated with the deploy hash. (Example: '023e5ad7edb6b72e6eac100e25a1c42b8d608744f3b6b38269cd80aac00464773b')
+
 - deploy_hash: The deploy hash that needs to be signed. (Example: 'f54ba7e43614e6a366cab74c243c3898fb95901cc0751b384a16fd8222d857b9')
 
 _Response:_
@@ -186,9 +188,7 @@ API Endpoint:
 http://localhost:4000/addSignature
 
 Method: POST
-Body:
 
-Query Parameters:
 Body:
 
 ```json
