@@ -31,13 +31,13 @@ make start test
 ## Run all after build
 
 ```shell
-make build-start
+make build-start test
 ```
 
 or to see logs
 
 ```shell
-make build-start-log
+make build-start-log test
 ```
 
 ## Close servers
