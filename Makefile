@@ -27,11 +27,11 @@ build-start: build
 build-start-log: build
 	$(DC) --profile $(PROFILE) up --remove-orphans
 
-test:
+run-test:
 	cd app/src && npm run test
 
 
 %:
 	@:
 
-.PHONY: build up start stop build-no-cache build-start build-start-log
+.PHONY: build up start stop build-no-cache build-start build-start-log run-test
