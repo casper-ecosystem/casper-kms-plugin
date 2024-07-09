@@ -1,6 +1,6 @@
 ## Installation
 
-Create an `.env` file at /src/.env containing aws credentials
+Create an `.env` file at /app/.env containing aws credentials
 
 ```
 AWS_REGION=
