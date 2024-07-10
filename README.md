@@ -231,7 +231,7 @@ _Body (Successful Response):_
 
 ## Deployment
 
-Create an `.env.production` file at /src/.env.production containing aws credentials to override .env
+Create an `.env.production` file at /app/.env.production containing aws credentials to override .env
 
 ## Tests
 
