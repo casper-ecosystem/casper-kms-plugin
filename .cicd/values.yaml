@@ -11,7 +11,7 @@ ingressClassName: <+serviceVariables.ingressClassName>
 # Service / Environment variables
 
 AWS_REGION: <+serviceVariables.AWS_REGION>
-KMS_CREATE_ID: <<+serviceVariables.KMS_CREATE_ID>
+KMS_CREATE_ID: <+serviceVariables.KMS_CREATE_ID>
 KMS_CREATE_KEY: <+serviceVariables.KMS_CREATE_KEY>
 KMS_SIGN_ID: <+serviceVariables.KMS_SIGN_ID>
 KMS_SIGN_KEY: <+serviceVariables.KMS_SIGN_KEY>
