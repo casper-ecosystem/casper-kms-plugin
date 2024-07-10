@@ -1,0 +1,17 @@
+# K8S / Harness
+envName: <+env.name>
+appName: <+service.name> 
+artifactImage: <+artifact.image> #from Harness Service Primary Artifact
+containerPort: <+serviceVariables.containerPort>
+servicePort: 80
+namespace:  <+service.name>-<+env.name>
+ingressDomainName: <+serviceVariables.ingressDomainName>
+ingressClassName: <+serviceVariables.ingressClassName>
+
+# Service / Environment variables
+
+AWS_REGION: <+serviceVariables.AWS_REGION>
+KMS_CREATE_ID: <<+serviceVariables.KMS_CREATE_ID>
+KMS_CREATE_KEY: <+serviceVariables.KMS_CREATE_KEY>
+KMS_SIGN_ID: <+serviceVariables.KMS_SIGN_ID>
+KMS_SIGN_KEY: <+serviceVariables.KMS_SIGN_KEY>
