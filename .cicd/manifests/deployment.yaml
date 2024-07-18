@@ -31,8 +31,8 @@ spec:
         envFrom:
         - configMapRef:
             name: {{.Values.appName}}-{{.Values.envName}}-config
-        imagePullSecrets:  
-         - name: {{.Values.appName}}-{{.Values.envName}}-dockercfg 
+      imagePullSecrets:  
+      - name: {{.Values.appName}}-{{.Values.envName}}-dockercfg 
 
 
   
