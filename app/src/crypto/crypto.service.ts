@@ -59,7 +59,7 @@ export class CryptoService {
       if (rBuffer.length > result.length && rBuffer.startsWith('00')) {
         rBuffer = rBuffer.slice(2);
       }
-      if (sBuffer.length > length && sBuffer.startsWith('00')) {
+      if (sBuffer.length > result.length && sBuffer.startsWith('00')) {
         sBuffer = sBuffer.slice(2);
       }
 
