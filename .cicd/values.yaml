@@ -2,6 +2,7 @@
 envName: <+env.name>
 appName: <+service.name> 
 artifactImage: <+artifact.image> #from Harness Service Primary Artifact
+dockercfg: <+artifact.imagePullSecret>
 containerPort: <+serviceVariables.containerPort>
 servicePort: 80
 namespace:  <+service.name>-<+env.name>
