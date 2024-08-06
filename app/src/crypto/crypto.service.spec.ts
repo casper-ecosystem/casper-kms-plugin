@@ -35,7 +35,7 @@ describe('CryptoService', () => {
     expect(result).toBe(expectedP1363Signature);
   });
 
-  it('should convert "Hi" s ASN.1 signature to P1363 correctly', () => {
+  it('should convert "High" s ASN.1 signature to P1363 correctly', () => {
     const signatureAsn1Base64 =
       'MEUCIASKOyv1PF6jyESy1sl5/OYzwVBegblC/bTX0+1kUdJ9AiEA/Pnlsqj6lR5Qbmm1T0vYaPHJO4XuABHuyexccISYWF4=';
 
@@ -43,7 +43,7 @@ describe('CryptoService', () => {
     const rBuffer =
       '048a3b2bf53c5ea3c844b2d6c979fce633c1505e81b942fdb4d7d3ed6451d27d';
 
-    // "Hi" s are normalized, see https://github.com/RustCrypto/elliptic-curves/issues/991
+    // "High" s are normalized, see https://github.com/RustCrypto/elliptic-curves/issues/991
     const normalizedSBuffer =
       '03061a4d57056ae1af91964ab0b42795c8e5a160c1488e4cf5e6021c4b9de8e3';
 
@@ -54,7 +54,7 @@ describe('CryptoService', () => {
     expect(result).toBe(expectedP1363Signature);
   });
 
-  it('should convert "Hi" r ASN.1 signature to P1363 correctly', () => {
+  it('should convert "High" r ASN.1 signature to P1363 correctly', () => {
     const signatureAsn1Base64 =
       'MEUCIQDysG64gheI8JxYfS+RmO6ppPVYZacx0aVGRF++Amnj1gIgdfIzEdpfakpaMvDwMEfrAYqYLiUWXt372Lvrqc8mohk=';
 
@@ -71,7 +71,7 @@ describe('CryptoService', () => {
     expect(result).toBe(expectedP1363Signature);
   });
 
-  it('should convert "Hi" r & "Hi" s ASN.1 signature to P1363 correctly', () => {
+  it('should convert "High" r & "High" s ASN.1 signature to P1363 correctly', () => {
     const signatureAsn1Base64 =
       'MEYCIQCAf2B+txlyCj7uxuSr5DefJ7cZsmC1ZaJJfYUpb/sk9wIhAM/f2mVwgHf+6FkGghXmxzFfmaWPWPVu2Wq0QMs4+mgo';
 
