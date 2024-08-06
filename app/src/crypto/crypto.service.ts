@@ -57,14 +57,23 @@ export class CryptoService {
 
       // Remove leading zeros if r or s is 33 bytes in hex starting with 0x00
       if (rBuffer.length > result.length && rBuffer.startsWith('00')) {
+        this.logger.debug('rBuffer before slice', rBuffer);
         rBuffer = rBuffer.slice(2);
-      }
-      if (sBuffer.length > result.length && sBuffer.startsWith('00')) {
-        sBuffer = sBuffer.slice(2);
+        this.logger.debug('rBuffer after slice', rBuffer);
       }
 
-      this.logger.debug('modified rBuffer:', rBuffer);
-      this.logger.debug('modified sBuffer:', sBuffer);
+      this.logger.debug('>> rBuffer:', rBuffer);
+
+      if (sBuffer.length > result.length && sBuffer.startsWith('00')) {
+        this.logger.debug('sBuffer before slice', sBuffer);
+        sBuffer = sBuffer.slice(2);
+        this.logger.debug('sBuffer before slice', sBuffer);
+
+        // "Hi" s buffer need to be normalized as per https://github.com/bitcoin/bips/blob/master/bip-0062.mediawiki#user-content-Low_S_values_in_signatures
+        sBuffer = this.normalizeS(sBuffer);
+      }
+
+      this.logger.debug('>> sBuffer:', sBuffer);
 
       const concatenatedHex = rBuffer + sBuffer;
 
@@ -77,6 +86,28 @@ export class CryptoService {
         'Error while trying to decode ASN.1 from signature: ' + error.message,
       );
     }
+  }
+
+  private normalizeS(sBuffer: string): string {
+    const CURVE_ORDER_HEX =
+      'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141';
+    const CURVE_ORDER = BigInt('0x' + CURVE_ORDER_HEX);
+    const HALF_CURVE_ORDER = CURVE_ORDER >> 1n;
+
+    let s = BigInt('0x' + sBuffer);
+    this.logger.debug('Original s: ', s.toString(16));
+
+    if (s > HALF_CURVE_ORDER) {
+      s = CURVE_ORDER - s;
+    }
+
+    let sHex = s.toString(16);
+    if (sHex.length % 2 !== 0) {
+      sHex = '0' + sHex;
+    }
+
+    this.logger.debug('Normalized s: ', sHex);
+    return sHex;
   }
 
   public publicKeyHexFromPem(publicPem: string): string {
