@@ -74,7 +74,7 @@ describe('CryptoService', () => {
     // "High" r
     const rBuffer =
       '807f607eb719720a3eeec6e4abe4379f27b719b260b565a2497d85296ffb24f7';
-    // "High" r
+    // "High" s
     const normalizedSBuffer =
       '3020259a8f7f880117a6f97dea1938cd5b15375756533162551e1dc1973bd919';
     const expectedP1363Signature = `02${rBuffer}${normalizedSBuffer}`;
