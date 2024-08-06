@@ -21,6 +21,7 @@ describe('CryptoService', () => {
   it('should convert "Low" s ASN.1 signature to P1363 correctly', () => {
     const signatureAsn1Base64 =
       'MEQCICTfgzylgrlhiNEK/bXgz48fv828is9OdQxN2pkDPolsAiBP92yyQCQwSSCUTx09JAw00M3wWXMfnGLO+y4Gds2cXA=';
+
     // "Low" r
     const rBuffer =
       '24df833ca582b96188d10afdb5e0cf8f1fbfcdbc8acf4e750c4dda99033e896c';
@@ -35,9 +36,10 @@ describe('CryptoService', () => {
   });
 
   it('should convert "Hi" s ASN.1 signature to P1363 correctly', () => {
-    // "Low" r
     const signatureAsn1Base64 =
       'MEUCIASKOyv1PF6jyESy1sl5/OYzwVBegblC/bTX0+1kUdJ9AiEA/Pnlsqj6lR5Qbmm1T0vYaPHJO4XuABHuyexccISYWF4=';
+
+    // "Low" r
     const rBuffer =
       '048a3b2bf53c5ea3c844b2d6c979fce633c1505e81b942fdb4d7d3ed6451d27d';
 
@@ -55,6 +57,7 @@ describe('CryptoService', () => {
   it('should convert "Hi" r ASN.1 signature to P1363 correctly', () => {
     const signatureAsn1Base64 =
       'MEUCIQDysG64gheI8JxYfS+RmO6ppPVYZacx0aVGRF++Amnj1gIgdfIzEdpfakpaMvDwMEfrAYqYLiUWXt372Lvrqc8mohk=';
+
     // "High" r
     const rBuffer =
       'f2b06eb8821788f09c587d2f9198eea9a4f55865a731d1a546445fbe0269e3d6';
@@ -71,6 +74,7 @@ describe('CryptoService', () => {
   it('should convert "Hi" r & "Hi" s ASN.1 signature to P1363 correctly', () => {
     const signatureAsn1Base64 =
       'MEYCIQCAf2B+txlyCj7uxuSr5DefJ7cZsmC1ZaJJfYUpb/sk9wIhAM/f2mVwgHf+6FkGghXmxzFfmaWPWPVu2Wq0QMs4+mgo';
+
     // "High" r
     const rBuffer =
       '807f607eb719720a3eeec6e4abe4379f27b719b260b565a2497d85296ffb24f7';
