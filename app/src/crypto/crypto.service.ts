@@ -69,7 +69,7 @@ export class CryptoService {
         sBuffer = sBuffer.slice(2);
         this.logger.debug('sBuffer before slice', sBuffer);
 
-        // "Hi" s buffer needs to be normalized as per https://github.com/bitcoin/bips/blob/master/bip-0062.mediawiki#user-content-Low_S_values_in_signatures
+        // "High" s buffer needs to be normalized as per https://github.com/bitcoin/bips/blob/master/bip-0062.mediawiki#user-content-Low_S_values_in_signatures
         sBuffer = this.normalizeS(sBuffer);
       }
 
