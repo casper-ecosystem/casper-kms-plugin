@@ -18,6 +18,71 @@ describe('CryptoService', () => {
     expect(normalizedS).toBe(expectedSBufferLo);
   });
 
+  it('should normalize S value correctly for value 0x0', () => {
+    const sBufferHi = '00'.repeat(32);
+
+    const normalizedS = service['normalizeS'](sBufferHi); // Accessing private method for test purpose
+
+    expect(normalizedS).toBe(sBufferHi);
+  });
+
+  it('should NOT normalize S value for value 0x1', () => {
+    const sBufferHi = '01'.padStart(64, '0');
+
+    const normalizedS = service['normalizeS'](sBufferHi); // Accessing private method for test purpose
+
+    expect(normalizedS).toBe(sBufferHi);
+  });
+
+  it('should NOT normalize S value correctly for value 0x2', () => {
+    const sBufferHi = '02'.padStart(64, '0');
+    const expectedSBufferLo = '02'.padStart(64, '0');
+
+    const normalizedS = service['normalizeS'](sBufferHi); // Accessing private method for test purpose
+
+    expect(normalizedS).toBe(expectedSBufferLo);
+  });
+
+  it('should NOT normalize S value correctly for value 7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B209F', () => {
+    const sBufferHi =
+      '7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B209F';
+
+    const normalizedS = service['normalizeS'](sBufferHi); // Accessing private method for test purpose
+
+    expect(normalizedS).toBe(sBufferHi.toLocaleLowerCase());
+  });
+
+  it('should NOT normalize S value correctly for value 7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0', () => {
+    const sBufferHi =
+      '7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0';
+
+    const normalizedS = service['normalizeS'](sBufferHi); // Accessing private method for test purpose
+
+    expect(normalizedS).toBe(sBufferHi.toLocaleLowerCase());
+  });
+
+  it('should normalize S value correctly for value 7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A1', () => {
+    const sBufferHi =
+      '7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A1';
+    const expectedSBufferLo =
+      '7fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a0';
+
+    const normalizedS = service['normalizeS'](sBufferHi); // Accessing private method for test purpose
+
+    expect(normalizedS).toBe(expectedSBufferLo.toLocaleLowerCase());
+  });
+
+  it('should normalize S value correctly for value FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF', () => {
+    const sBufferHi =
+      'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF';
+    const expectedSBufferLo =
+      '000000000000000000000000000000-14551231950b75fc4402da1732fc9bebe';
+
+    const normalizedS = service['normalizeS'](sBufferHi); // Accessing private method for test purpose
+
+    expect(normalizedS).toBe(expectedSBufferLo.toLocaleLowerCase());
+  });
+
   it('should convert "Low" s ASN.1 signature to P1363 correctly', () => {
     const signatureAsn1Base64 =
       'MEQCICTfgzylgrlhiNEK/bXgz48fv828is9OdQxN2pkDPolsAiBP92yyQCQwSSCUTx09JAw00M3wWXMfnGLO+y4Gds2cXA=';

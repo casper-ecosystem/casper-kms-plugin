@@ -69,7 +69,7 @@ export class CryptoService {
         sBuffer = sBuffer.slice(2);
         this.logger.debug('sBuffer before slice', sBuffer);
 
-        // "Hi" s buffer needs to be normalized as per https://github.com/bitcoin/bips/blob/master/bip-0062.mediawiki#user-content-Low_S_values_in_signatures
+        // "High" s buffer needs to be normalized as per https://github.com/bitcoin/bips/blob/master/bip-0062.mediawiki#user-content-Low_S_values_in_signatures
         sBuffer = this.normalizeS(sBuffer);
       }
 
@@ -94,18 +94,29 @@ export class CryptoService {
     const CURVE_ORDER = BigInt('0x' + CURVE_ORDER_HEX);
     const HALF_CURVE_ORDER = CURVE_ORDER >> 1n;
 
+    const THRESHOLD_HEX =
+      '7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0';
+    const THRESHOLD = BigInt('0x' + THRESHOLD_HEX);
+
+    // Convert the input buffer to a BigInt for next conditions
     let s = BigInt('0x' + sBuffer);
-    this.logger.debug('Original s: ', s.toString(16));
+
+    // If s is below or equal to the THRESHOLD, return it as is lowercased
+    if (s <= THRESHOLD) {
+      this.logger.debug(
+        's above or equal to threshold, returned as is lowercased: ',
+        sBuffer,
+      );
+      return sBuffer.toLocaleLowerCase();
+    }
 
     if (s > HALF_CURVE_ORDER) {
       s = CURVE_ORDER - s;
     }
 
     let sHex = s.toString(16);
-    if (sHex.length % 2 !== 0) {
-      sHex = '0' + sHex;
-    }
-
+    // Ensure 64 characters lowercased
+    sHex = sHex.padStart(64, '0').toLocaleLowerCase();
     this.logger.debug('Normalized s: ', sHex);
     return sHex;
   }
