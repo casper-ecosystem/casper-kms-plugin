@@ -43,7 +43,7 @@ describe('CryptoService', () => {
     expect(normalizedS).toBe(expectedSBufferLo);
   });
 
-  it('should NOT normalize S value correctly for value 7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B209F', () => {
+  it('should NOT normalize S value correctly for "Low" value 7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B209F', () => {
     const sBufferLo =
       '7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B209F';
 
@@ -52,7 +52,7 @@ describe('CryptoService', () => {
     expect(normalizedS).toBe(sBufferLo.toLocaleLowerCase());
   });
 
-  it('should NOT normalize S value correctly for value 7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0', () => {
+  it('should NOT normalize S value correctly for "Low" value 7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0', () => {
     const sBufferThreshold =
       '7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0';
 
@@ -61,7 +61,7 @@ describe('CryptoService', () => {
     expect(normalizedS).toBe(sBufferThreshold.toLocaleLowerCase());
   });
 
-  it('should normalize S value correctly for value 7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A1', () => {
+  it('should normalize S value correctly for "High" value 7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A1', () => {
     const sBufferHi =
       '7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A1';
     const expectedSBufferLo =
@@ -72,11 +72,11 @@ describe('CryptoService', () => {
     expect(normalizedS).toBe(expectedSBufferLo.toLocaleLowerCase());
   });
 
-  it('should normalize S value correctly for value FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF', () => {
+  it('should normalize S value correctly for n value FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141', () => {
     const sBufferHi =
-      'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF';
+      'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141';
     const expectedSBufferLo =
-      '000000000000000000000000000000-14551231950b75fc4402da1732fc9bebe';
+      '0000000000000000000000000000000000000000000000000000000000000000';
 
     const normalizedS = service['normalizeS'](sBufferHi); // Accessing private method for test purpose
 
