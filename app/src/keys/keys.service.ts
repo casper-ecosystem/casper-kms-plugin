@@ -135,11 +135,11 @@ export class KeysService {
       this.logger.debug('signature_asn1_base64', signature_asn1_base64);
       // MEQCIEC/XbpuvXoJiPNmmWOt1lZ8TQSA1Je3ETwxgJYLzTU4AiAIdkD09QCk+led1e55o5HbAefdyTb3rAV1CousZWplag==
 
-      const hex_signature_asn1_base64 = Buffer.from(
-        signature.Signature,
-      ).toString('hex');
+      const signature_asn1_hex = Buffer.from(signature.Signature).toString(
+        'hex',
+      );
 
-      this.logger.debug('hex_signature_asn1_base64', hex_signature_asn1_base64);
+      this.logger.debug('signature_asn1_hex', signature_asn1_hex);
       // 3044022040bf5dba6ebd7a0988f3669963add6567c4d0480d497b7113c3180960bcd35380220087640f4f500a4fa579dd5ee79a391db01e7ddc936f7ac05750a8bac656a656a
 
       const signature_hex = this.cryptoService.convertSignatureAsn1ToP1363(

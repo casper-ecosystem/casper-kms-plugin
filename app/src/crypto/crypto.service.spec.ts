@@ -152,4 +152,68 @@ describe('CryptoService', () => {
 
     expect(result).toBe(expectedP1363Signature);
   });
+
+  it('should convert 31 bytes (62 chars) s case correctly', () => {
+    const signatureAsn1Base64 =
+      'MEMCIAg0RobWi8vhwDWSTdzefp4o3mxkKpgczp85G8b+6/XQAh8Vt9XaUSrPP7aAtcDr6V2LJYPlKrJvknUVL7xlMR5o';
+
+    const rBuffer =
+      '08344686d68bcbe1c035924ddcde7e9e28de6c642a981cce9f391bc6feebf5d0';
+    // This s buffer shoudl remain padded with leading 00 > 32 bytes (64 chars)
+    const sBuffer =
+      '0015b7d5da512acf3fb680b5c0ebe95d8b2583e52ab26f9275152fbc65311e68';
+    const expectedP1363Signature = `02${rBuffer}${sBuffer}`;
+
+    const result = service.convertSignatureAsn1ToP1363(signatureAsn1Base64);
+
+    expect(result).toBe(expectedP1363Signature);
+  });
+
+  it('should convert 31 bytes (62 chars) s second test case correctly', () => {
+    const signatureAsn1Base64 =
+      'MEQCIQC4j8dSz5xWca8UYukRYt87MP+rJ797uvXkHaNKrLCg6gIfb9sPXNyJpmxJloZ9TH4szucyyqChzbwxFuCCTeOx7A==';
+
+    const rBuffer =
+      'b88fc752cf9c5671af1462e91162df3b30ffab27bf7bbaf5e41da34aacb0a0ea';
+    // This s buffer shoudl remain padded with leading 00 > 32 bytes (64 chars)
+    const sBuffer =
+      '006fdb0f5cdc89a66c4996867d4c7e2ccee732caa0a1cdbc3116e0824de3b1ec';
+    const expectedP1363Signature = `02${rBuffer}${sBuffer}`;
+
+    const result = service.convertSignatureAsn1ToP1363(signatureAsn1Base64);
+
+    expect(result).toBe(expectedP1363Signature);
+  });
+
+  it('should convert 31 bytes (62 chars) r test case correctly', () => {
+    const signatureAsn1Base64 =
+      'MEQCHwVewc5vYBh0uANEVnch5Qq7kLaD9ojDPWNz8ixzifsCIQCR0o9yhPjSguxHde3zycL+0Qz3jvblvQ8Xsbp6uCc4SA==';
+
+    const rBuffer =
+      '00055ec1ce6f601874b80344567721e50abb90b683f688c33d6373f22c7389fb';
+    // This s buffer shoudl remain padded with leading 00 > 32 bytes (64 chars)
+    const sBuffer =
+      '6e2d708d7b072d7d13b88a120c363cffe9a1e557b862e32ca820a412180f08f9';
+    const expectedP1363Signature = `02${rBuffer}${sBuffer}`;
+
+    const result = service.convertSignatureAsn1ToP1363(signatureAsn1Base64);
+
+    expect(result).toBe(expectedP1363Signature);
+  });
+
+  it('should convert 31 bytes (62 chars) r second test case correctly', () => {
+    const signatureAsn1Base64 =
+      'MEMCIH9zJvl+l1vCZykJAcw/qr+QthbzNBnIK3wpbk4peSOYAh9amJ8A2D0/1CCXSK/A+/vwE6eIokoIGxj1D3Wfkf79';
+
+    const rBuffer =
+      '7f7326f97e975bc267290901cc3faabf90b616f33419c82b7c296e4e29792398';
+    // This s buffer shoudl remain padded with leading 00 > 32 bytes (64 chars)
+    const sBuffer =
+      '005a989f00d83d3fd4209748afc0fbfbf013a788a24a081b18f50f759f91fefd';
+    const expectedP1363Signature = `02${rBuffer}${sBuffer}`;
+
+    const result = service.convertSignatureAsn1ToP1363(signatureAsn1Base64);
+
+    expect(result).toBe(expectedP1363Signature);
+  });
 });
