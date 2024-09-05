@@ -119,7 +119,7 @@ export class CryptoService {
       const expected_length = result.length * 2;
       if (expected_length !== concatenatedHex.length) {
         throw new Error(
-          `Error while trying to decode ASN.1 from signature: concatenated Hex length ${concatenatedHex.length} not ${expected_length} `,
+          `Error while trying to decode ASN.1 from signature: concatenated Hex length ${concatenatedHex.length} not ${expected_length}`,
         );
       }
       const full33BytesHexSignature =
