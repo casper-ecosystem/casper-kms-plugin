@@ -91,7 +91,6 @@ export class AppController {
     return this.keysService.signDeployHash(deploy_hash, public_key);
   }
 
-
   @Post('addSignature')
   @ApiOperation({
     summary: 'Helper: Add a given signature to a deploy object',
