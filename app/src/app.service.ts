@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { Deploy, Verbosity, jsonPrettyPrint } from 'casper-ts-sdk';
+import { version } from './main';
 @Injectable()
 export class AppService {
   protected readonly logger = new Logger(AppService.name);
@@ -7,7 +8,7 @@ export class AppService {
   constructor() { }
 
   getHello(message: string = 'KMS'): string {
-    return `Hello ${message}!`;
+    return `Hello ${message}! Version: ${version}`;
   }
 
   // Helper method to add a signature to a deploy
