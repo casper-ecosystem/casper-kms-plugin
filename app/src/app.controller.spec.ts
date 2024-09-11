@@ -2,11 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { KeysService } from './keys/keys.service';
-import { ConfigService } from 'aws-sdk';
 import { MockService } from './mock/mock.service';
 import { keysServiceFactory } from './app.module';
 import { CryptoService } from './crypto/crypto.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import config from './config';
 
 const _config = config();
@@ -51,11 +50,13 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should keysService', () => {
+    it('should have keysService', () => {
       expect(keysService).toBeDefined();
     });
     it('should return "Hello KMS!"', () => {
-      expect(appController.getHello()).toBe('Hello KMS MOCK_TESTING_MODE!');
+      const versionRegex =
+        /Hello KMS MOCK_TESTING_MODE! Version: \d+\.\d+\.\d+/;
+      expect(appController.getHello()).toMatch(versionRegex);
     });
   });
 });

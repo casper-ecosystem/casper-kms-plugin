@@ -27,7 +27,6 @@
     "@nestjs/core": "^10.4.1",
     "@nestjs/platform-express": "^10.4.1",
     "@nestjs/swagger": "^7.4.0",
-    "aws-sdk": "^2.1603.0",
     "casper-ts-sdk": "file:../pkg-nodejs",
     "express": "^4.20.0",
     "node-forge": "^1.3.1",

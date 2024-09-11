@@ -2,11 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import config from './config';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { version } = require('../package.json');
-
-export { version };
+import { version } from './version';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
