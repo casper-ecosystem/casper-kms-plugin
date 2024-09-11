@@ -5,5 +5,5 @@ replicaCount: 3
 resourceCpuRequest: 500m
 resourceCpuLimit: 1
 
-resourceMemoryRequest: 500Mi
-resourceMemoryLimit: 2Gi
+resourceMemoryRequest: 300Mi
+resourceMemoryLimit: 1Gi
