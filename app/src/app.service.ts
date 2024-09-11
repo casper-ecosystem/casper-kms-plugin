@@ -1,12 +1,10 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { Deploy, Verbosity, jsonPrettyPrint } from 'casper-ts-sdk';
-import { version } from './main';
+import { version } from './version';
 
 @Injectable()
 export class AppService {
   protected readonly logger = new Logger(AppService.name);
-
-  constructor() {}
 
   getHello(message: string = 'KMS'): string {
     return `Hello ${message}! Version: ${version}`;
