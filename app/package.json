@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-kms": "^3.556.0",
-    "@aws-sdk/types": "^3.535.0",
+    "@aws-sdk/types": "^3.667.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.2",
     "@nestjs/core": "^10.4.1",
