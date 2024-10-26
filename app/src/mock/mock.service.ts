@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import {
-  privateToPublicKey,
-  generatePrivateKey_secp256k1,
+  publicKeyFromSecretKey,
+  generateSecretKey_secp256k1,
   Deploy,
   SDK,
   DeployStrParams,
@@ -36,13 +36,13 @@ export class MockService {
 
   public async generateKeypair(): Promise<string> {
     this.logger.debug('generate key pair');
-    const private_key: string = generatePrivateKey_secp256k1();
+    const private_key: string = generateSecretKey_secp256k1();
     if (!private_key) {
       const err = 'No private key generated';
       this.logger.error(err);
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    const public_key: string = privateToPublicKey(private_key);
+    const public_key: string = publicKeyFromSecretKey(private_key);
     if (!public_key) {
       const err = 'No public_key key generated';
       this.logger.error(err);
